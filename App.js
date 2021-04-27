@@ -7,8 +7,8 @@ import logo from './assets/logo.png';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Image source={logo} style={{width: 305, height: 159}} />
-      <Text style={{color: '#888', fontSize: 18}}>Para compartilhar uma foto do seu telefone com um amigo, basta pressionar o botão abaixo!</Text>
+      <Image source={logo} style={styles.logo} />
+      <Text style={styles.instructions}>Para compartilhar uma foto do seu telefone com um amigo, basta pressionar o botão abaixo!</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -21,4 +21,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  logo: {
+    width: 305,
+    height: 159,
+    marginBottom: 10,
+  },
+  instructions: {
+    color: '#888',
+    fontSize: 18,
+    marginHorizontal: 15,
+  }, 
 });
