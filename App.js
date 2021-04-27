@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as Sharing from 'expo-sharing'; 
 import logo from './assets/logo.png';
 
 
@@ -25,6 +26,15 @@ export default function App() {
     setSelectedImage({ localUri: picker.uri });
   }
 
+  const openShareDialog = async () => {
+    if (!(await Sharing.isAvailableAsync())) {
+      alert(`Oops, o compartilhamento não está disponível na sua plataforma!`);
+      return;
+    }
+
+    await Sharing.shareAsync(selectedImage.localUri);
+  }
+
   if (selectedImage !== null) {
     return (
       <View style={styles.container}>
@@ -32,6 +42,9 @@ export default function App() {
           source={{ uri: selectedImage.localUri }}
           style={styles.thumbnail}
         />
+        <TouchableOpacity onPress={openShareDialog} style={styles.button}>
+          <Text style={styles.buttonText}>Compartilhar essa foto</Text>
+        </TouchableOpacity>
       </View>
     );
   }
