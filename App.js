@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Sharing from 'expo-sharing'; 
+import AnonymousFiles from 'anonymous-files'; 
 import logo from './assets/logo.png';
 
 
@@ -23,12 +24,17 @@ export default function App() {
       return;
     }
 
-    setSelectedImage({ localUri: picker.uri });
+    if (Platform.OS === 'web') {
+      const remoteUri = await AnonymousFiles(picker.uri);
+      setSelectedImage({ localUri: picker.uri, remoteUri });
+    } else {
+      setSelectedImage({ localUri: picker.uri, remoteUri: null });
+    } 
   }
 
-  const openShareDialog = async () => {
+  const openShareDialog = async () => { 
     if (!(await Sharing.isAvailableAsync())) {
-      alert(`Oops, o compartilhamento não está disponível na sua plataforma!`);
+      alert(`A imagem está disponível em: ${selectedImage.remoteUri}`);
       return;
     }
 
