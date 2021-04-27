@@ -1,19 +1,50 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import logo from './assets/logo.png';
 
 
 export default function App() {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openImagePicker = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+
+    if(permission.granted === false) {
+      alert("É necessário conceder acesso ao rolo da câmera!")
+      return;
+    }
+
+    const picker = await ImagePicker.launchImageLibraryAsync();
+    
+    if(picker.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage({ localUri: picker.uri });
+  }
+
+  if (selectedImage !== null) {
+    return (
+      <View style={styles.container}>
+        <Image
+          source={{ uri: selectedImage.localUri }}
+          style={styles.thumbnail}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
       <Text style={styles.instructions}>Para compartilhar uma foto do seu telefone com um amigo, basta pressionar o botão abaixo!</Text>
       <StatusBar style="auto" />
       <TouchableOpacity
-        onPress={() => alert('Hello, World!')}
+        onPress={openImagePicker}
         style={styles.button}>
-        <Text style={styles.buttonText}>Pick a photo</Text>
+        <Text style={styles.buttonText}>escolha uma foto</Text>
       </TouchableOpacity>
     </View>
   );
@@ -45,4 +76,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
   },  
+  thumbnail: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain"
+  }
 });
